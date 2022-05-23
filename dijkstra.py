@@ -25,7 +25,6 @@ vertices = ["Casa","Auto","C85-A","T18-A","Providencia","C135", "Americas", "R.C
 11 Caminar Nueva Escocia
 12 Bicicleta
 13 CETI
-
 """
 Grafo = nx.Graph()
 for i in range(12):
@@ -63,57 +62,55 @@ Grafo.add_edge(vertices[12],vertices[13], weight=pesos[15], color='b')
 #Matriz de adyacencia
 
         #0          1          2            3           4          5          6         7           8         9         10          11        12            13
-mat =  [[0,         1,          pesos[2],  0,           0,         pesos[6],  0,        1,          0,        0,        0,          0,        1,            0     ], #0
-        [1,         0,          0,         0,           0,         0,         0,        0,          0,        0,        0,          0,        0,            pesos[1]], #1
-        [pesos[2],  0,          0,         pesos[3],    0,         0,         0,        0,          0,        0,        0,          0,        0,            0     ], #2
-        [0,         0,          pesos[3],  0,           pesos[4],  0,         0,        0,          0,        0,        0,          0,        0,            0     ], #3
-        [0,         0,          0,         pesos[4],    0,         0,         0,        0,          0,        0,        0,          0,        0,            pesos[5]], #4
-        [pesos[6],  0,          0,         0,           0,         0,         pesos[7], 0,          0,        0,        0,          0,        0,            0     ], #5
-        [0,         0,          0,         0,           0,         pesos[7],  0,        0,          0,        0,        0,          0,        0,            pesos[8]], #6
-        [1,         0,          0,         0,           0,         0,         0,        0,          pesos[9], pesos[12],0,          0,        0,            0     ], #7
-        [0,         0,          0,         0,           0,         0,         0,        pesos[9],   0,        0,        0,          pesos[10],0,            0     ], #8
-        [0,         0,          0,         0,           0,         0,         0,        pesos[12],  0,        0,        pesos[13],  0,        0,            0     ], #9
-        [0,         0,          0,         0,           0,         0,         0,        0,          0,        pesos[13],0,          pesos[14],0,            0     ], #10
+mat =  [[0,         1,          pesos[2],  0,           0,         pesos[6],  0,        1,          0,        0,        0,          0,        1,            0        ], #0
+        [1,         0,          0,         0,           0,         0,         0,        0,          0,        0,        0,          0,        0,            pesos[1] ], #1
+        [pesos[2],  0,          0,         pesos[3],    0,         0,         0,        0,          0,        0,        0,          0,        0,            0        ], #2
+        [0,         0,          pesos[3],  0,           pesos[4],  0,         0,        0,          0,        0,        0,          0,        0,            0        ], #3
+        [0,         0,          0,         pesos[4],    0,         0,         0,        0,          0,        0,        0,          0,        0,            pesos[5] ], #4
+        [pesos[6],  0,          0,         0,           0,         0,         pesos[7], 0,          0,        0,        0,          0,        0,            0        ], #5
+        [0,         0,          0,         0,           0,         pesos[7],  0,        0,          0,        0,        0,          0,        0,            pesos[8] ], #6
+        [1,         0,          0,         0,           0,         0,         0,        0,          pesos[9], pesos[12],0,          0,        0,            0        ], #7
+        [0,         0,          0,         0,           0,         0,         0,        pesos[9],   0,        0,        0,          pesos[10],0,            0        ], #8
+        [0,         0,          0,         0,           0,         0,         0,        pesos[12],  0,        0,        pesos[13],  0,        0,            0        ], #9
+        [0,         0,          0,         0,           0,         0,         0,        0,          0,        pesos[13],0,          pesos[14],0,            0        ], #10
         [0,         0,          0,         0,           0,         0,         0,        0,          pesos[10],0,        pesos[14],  0,        0,            pesos[11]], #11
         [1,         0,          0,         0,           0,         0,         0,        0,          0,        0,        0,          0,        0,            pesos[15]], #12
-        [0,         pesos[1],   0,         0,           pesos[5],  0,         pesos[8], 0,          0,        0,        0,          pesos[13],pesos[15],    0     ]] #13
+        [0,         pesos[1],   0,         0,           pesos[5],  0,         pesos[8], 0,          0,        0,        0,          pesos[13],pesos[15],    0       ]]  #13
 
 
-
-
-def dijkstra(m, inicio, fin=-1):
+def dijkstra(m, inicio, fin):
     tam = len(m)
     dist = [math.inf]*tam
     dist[inicio] = m[inicio][inicio]
-
     vertice = [False]*tam
     npadre = [-1]*tam
-
     cami = [{}]*tam
-
     for i in range(tam-1):
         minix = math.inf
         x = 0
-
         for y in range(len(vertice)):
             if vertice[y] == False and dist[y] <= minix:
                 minix = dist[y]
                 x = y
 
         vertice[x] = True
+        
         for y in range(tam):
-            if not(vertice[y]) and m[x][y] != 0 and dist[x] + m[x][y] < dist[y]:
+            if not(vertice[y]) and m[x][y]!=0 and dist[x] + m[x][y] < dist[y]:
                 npadre[y] = x
                 dist[y] = dist[x] + m[x][y]
 
     for i in range(tam):
         cont = i
         temp = []
+        
         while npadre[cont] != -1:
             temp.append(cont)
             cont = npadre[cont]
+            
         temp.append(inicio)
         cami[i] = temp[::-1]
+        
     return (dist[fin], cami[fin]) if fin >= 0 else (dist, cami)
 
 
@@ -121,10 +118,8 @@ pesofin,camino= dijkstra(mat, 0, 13)
 
 for i in range(len(camino)-1):
     Grafo.add_edges_from ([(vertices[camino[i]],vertices[camino[i+1]])], color = 'red')
-    
 
 #"""
-
 """
 #networkx
 
@@ -179,7 +174,6 @@ nx.draw_networkx_edge_labels(
                  },
     font_color='red'
 )
-
 
 for n in camino:
     print(vertices[n])
