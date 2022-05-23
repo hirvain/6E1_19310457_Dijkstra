@@ -2,35 +2,143 @@
 """
 Created on Wed May 18 02:59:32 2022
 
-@author: Equipo
+@author: Oscar Antonio García Avila
 """
 import networkx as nx
 import matplotlib.pyplot as plt
 import random
+import math
+#                  0                      1                   2                   3                          4                      5                       6                         7                     8                       9                       10                        11                       12                    13                      14                      15
+pesos = [random.randint(10, 20),random.randint(10, 20),random.randint(5, 10), random.randint(20, 30),random.randint(10, 30),random.randint(7, 12), random.randint(5, 10), random.randint(25, 40), random.randint(20, 30), random.randint(12, 20), random.randint(30, 50), random.randint(10, 20), random.randint(12, 20), random.randint(20, 30), random.randint(20, 30), random.randint(40, 60)]
+vertices = ["Casa","Auto","C85-A","T18-A","Caminar desde Providencia","C135", "Caminar desde Americas", "Caminar a Real Center", "C54", "C72", "T08", "Caminar Nueva Escocia", "Bicicleta", "CETI" ]
+"""
+0 Casa
+1 Auto
+2 C85-A
+3 T18-A
+4 Caminar desde Providencia
+5 C135
+6 Caminar desde Americas
+7 Caminar a Real Center
+8 C54
+9 C72
+10 T08
+11 Caminar Nueva Escocia
+12 Bicicleta
+13 CETI
 
-pesos = [random.randint(1, 10),random.randint(1, 10),random.randint(1, 10),random.randint(1, 10),random.randint(1, 10),random.randint(1, 10),random.randint(1, 10)]
-
-
+"""
 Grafo = nx.Graph()
-Grafo.add_node("A")      
-Grafo.add_node("E")
-Grafo.add_node("I")
-Grafo.add_node("O")
-Grafo.add_node("U")
-Grafo.add_edge("A","E", weight=pesos[0], color='b')  
-Grafo.add_edge("E","I", weight=pesos[1], color='b')
-Grafo.add_edge("O","A", weight=pesos[2], color='b')
-Grafo.add_edge("O","U", weight=pesos[3], color='b')
-Grafo.add_edge("I","U", weight=pesos[4], color='b')
-Grafo.add_edge("E","U", weight=pesos[5], color='b')
-Grafo.add_edge("E","O", weight=pesos[6], color='b')
+for i in range(12):
+    Grafo.add_node(vertices[i])  
 
-#camino = nx.dijkstra_path(Grafo, source='U', target = 'I', weight = True)
-length,camino=nx.bidirectional_dijkstra(Grafo,'U','I') #Siempre usar bidirectional_dijkstra
+Grafo.add_edge(vertices[0],vertices[1], weight=1, color='b') 
+Grafo.add_edge(vertices[1],vertices[2], weight=pesos[1], color='b') 
+
+
+Grafo.add_edge(vertices[0],vertices[2], weight=pesos[2], color='b')
+Grafo.add_edge(vertices[2],vertices[3], weight=pesos[3], color='b')
+Grafo.add_edge(vertices[3],vertices[4], weight=pesos[4], color='b')
+Grafo.add_edge(vertices[4],vertices[13],weight=pesos[5], color='b')
+
+Grafo.add_edge(vertices[0],vertices[5], weight=pesos[6], color='b')
+Grafo.add_edge(vertices[5],vertices[6], weight=pesos[7], color='b')
+Grafo.add_edge(vertices[6],vertices[13],weight=pesos[8], color='b')
+
+
+Grafo.add_edge(vertices[0],vertices[7], weight=1, color='b')
+Grafo.add_edge(vertices[7],vertices[8], weight=pesos[9], color='b')
+Grafo.add_edge(vertices[8],vertices[11], weight=pesos[10], color='b')
+Grafo.add_edge(vertices[11],vertices[13], weight=pesos[11], color='b')
+
+
+Grafo.add_edge(vertices[7],vertices[9], weight=pesos[12], color='b')
+Grafo.add_edge(vertices[9],vertices[10], weight=pesos[13], color='b')
+Grafo.add_edge(vertices[10],vertices[11], weight=pesos[14], color='b')
+
+
+Grafo.add_edge(vertices[0],vertices[12], weight=1, color='b')
+Grafo.add_edge(vertices[12],vertices[13], weight=pesos[15], color='b')
+
+#Matriz de adyacencia
+
+        #0          1          2            3           4          5          6         7           8         9         10          11        12            13
+mat =  [[0,         1,          pesos[2],  0,           0,         pesos[6],  0,        1,          0,        0,        0,          0,        1,            0     ], #0
+        [1,         0,          pesos[1],  0,           0,         0,         0,        0,          0,        0,        0,          0,        0,            0     ], #1
+        [pesos[2],  pesos[1],   0,         pesos[3],    0,         0,         0,        0,          0,        0,        0,          0,        0,            0     ], #2
+        [0,         0,          pesos[3],  0,           pesos[4],  0,         0,        0,          0,        0,        0,          0,        0,            0     ], #3
+        [0,         0,          0,         pesos[4],    0,         0,         0,        0,          0,        0,        0,          0,        0,            pesos[5]], #4
+        [pesos[6],  0,          0,         0,           0,         0,         pesos[7], 0,          0,        0,        0,          0,        0,            0     ], #5
+        [0,         0,          0,         0,           0,         pesos[7],  0,        0,          0,        0,        0,          0,        0,            pesos[8]], #6
+        [1,         0,          0,         0,           0,         0,         0,        0,          pesos[9], pesos[12],0,          0,        0,            0     ], #7
+        [0,         0,          0,         0,           0,         0,         0,        pesos[9],   0,        0,        0,          pesos[10],0,            0     ], #8
+        [0,         0,          0,         0,           0,         0,         0,        pesos[12],  0,        0,        pesos[13],  0,        0,            0     ], #9
+        [0,         0,          0,         0,           0,         0,         0,        0,          0,        pesos[13],0,          pesos[14],0,            0     ], #10
+        [0,         0,          0,         0,           0,         0,         0,        0,          pesos[10],0,        pesos[14],  0,        0,            pesos[11]], #11
+        [1,         0,          0,         0,           0,         0,         0,        0,          0,        0,        0,          0,        0,            pesos[15]], #12
+        [0,         0,          0,         0,           pesos[5],  0,         pesos[8], 0,          0,        0,        0,          pesos[13],pesos[15],    0     ]] #13
+
+
+
+
+def dijkstra(m, inicio, fin=-1):
+    tam = len(m)
+    dist = [math.inf]*tam
+    dist[inicio] = m[inicio][inicio]
+
+    vertice = [False]*tam
+    npadre = [-1]*tam
+
+    cami = [{}]*tam
+
+    for i in range(tam-1):
+        minix = math.inf
+        x = 0
+
+        for y in range(len(vertice)):
+            if vertice[y] == False and dist[y] <= minix:
+                minix = dist[y]
+                x = y
+
+        vertice[x] = True
+        for y in range(tam):
+            if not(vertice[y]) and m[x][y] != 0 and dist[x] + m[x][y] < dist[y]:
+                npadre[y] = x
+                dist[y] = dist[x] + m[x][y]
+
+    for i in range(tam):
+        cont = i
+        temp = []
+        while npadre[cont] != -1:
+            temp.append(cont)
+            cont = npadre[cont]
+        temp.append(inicio)
+        cami[i] = temp[::-1]
+    return (dist[fin], cami[fin]) if fin >= 0 else (dist, cami)
+
+
+
+
+
+pesofin,camino= dijkstra(mat, 0, 13)
+
+for i in range(len(camino)-1):
+    Grafo.add_edges_from ([(vertices[camino[i]],vertices[camino[i+1]])], color = 'red')
+    
+
+
+
+"""
+#networkx
+
+#camino = nx.dijkstra_path(Grafo, source='U', target = 'I', weight = True) 
+length,camino=nx.bidirectional_dijkstra(Grafo,'Casa','CETI') #Siempre usar bidirectional_dijkstra
+print(camino)
+
 
 for i in range(len(camino)-1):
     Grafo.add_edges_from ([(camino[i],camino[i+1])], color = 'red')
-    
+""" 
 colors = nx.get_edge_attributes(Grafo,'color').values()
 
 pos = nx.spring_layout(Grafo)
@@ -45,16 +153,37 @@ nx.draw(
 
 nx.draw_networkx_edge_labels(
     Grafo, pos,
-    edge_labels={('A', 'E'): pesos[0],
-                 ('E', 'I'): pesos[1], 
-                 ('O', 'A'): pesos[2],
-                 ('O', 'U'): pesos[3],
-                 ('I', 'U'): pesos[4],
-                 ('E', 'U'): pesos[5],
-                 ('E', 'O'): pesos[6], 
+    edge_labels={(vertices[0],vertices[1]): 1,
+                 (vertices[1],vertices[2]): pesos[1], 
+                 
+                 (vertices[0],vertices[2]): pesos[2],
+                 (vertices[2],vertices[3]): pesos[3],
+                 (vertices[3],vertices[4]): pesos[4],
+                 (vertices[4],vertices[13]):pesos[5],
+                 
+                 
+                 (vertices[0],vertices[5]): pesos[6],
+                 (vertices[5],vertices[6]): pesos[7], 
+                 (vertices[6],vertices[13]):pesos[8],
+                 
+                 
+                 (vertices[0],vertices[7]):   1,
+                 (vertices[7],vertices[8]):   pesos[9],
+                 (vertices[8],vertices[11]):  pesos[10],
+                 (vertices[11],vertices[13]): pesos[11],
+                 
+                 (vertices[7],vertices[9]):   pesos[12], 
+                 (vertices[9],vertices[10]):  pesos[13], 
+                 (vertices[10],vertices[11]): pesos[14],
+                 
+                 (vertices[0],vertices[12]):  1,
+                 (vertices[12],vertices[13]): pesos[15],
                  
                  },
     font_color='red'
 )
 
-print(camino)
+for n in camino:
+    print(vertices[n])
+
+print("Peso minimo: ",pesofin)
